@@ -1,6 +1,8 @@
 const path = require("path");
 const express = require("express");
+const logger = require("morgan");
 const routes = require("./controllers");
+const mongoose = require("mongoose");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -18,8 +20,6 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout");
 
 app.use(routes);
 
-sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () =>
-    console.log(`========== App listening on port ${PORT} ==========`)
-  );
+app.listen(PORT, () => {
+  console.log(`App running on port ${PORT}!`);
 });
