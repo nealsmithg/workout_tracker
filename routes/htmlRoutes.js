@@ -2,7 +2,7 @@ const router = require("express").Router();
 const {} = require("../models");
 
 router.get("/", async (req, res) => {
-  res.render();
+  res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
 module.exports = router;
