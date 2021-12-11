@@ -4,11 +4,13 @@ const logger = require("morgan");
 const routes = require("./routes");
 const mongoose = require("mongoose");
 
-const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(logger("dev"));
+const app = express();
+
 app.use(express.urlencoded({ extended: true }));
+app.use(logger("dev"));
+
 app.use(express.json());
 app.use(express.static("public"));
 
