@@ -13,7 +13,13 @@ app.get("/workouts", (req, res) => {
 });
 
 app.get("/workouts/range", (req, res) => {
-  db.Workout.find({})
+  db.Workout.aggregate([
+    {
+      $addFields: {
+        totalDuration: { $sum: "$exercises.duration" },
+      },
+    },
+  ])
     .sort({ day: -1 })
     .limit(7)
     .then((dbWorkouts) => {
@@ -25,17 +31,24 @@ app.get("/workouts/range", (req, res) => {
 });
 
 app.put("/workouts/:id", (req, res) => {
-  db.Workout.findByIdAndUpdate(req.params.id, req.body)
-    .then((dbWorkouts) => {
-      res.json(dbWorkouts);
+  console.log("here")
+  db.Workout.findByIdAndUpdate(
+    req.params.id ,
+    { $push: {exercises: req.body}  },
+    { new: true, runValidators: true }
+  )
+    .then((dbWorkout) => {
+      console.log("***",dbWorkout)
+      res.json(dbWorkout);
     })
     .catch((err) => {
+      console.log("***", err)
       res.json(err);
     });
 });
 
 app.post("/workouts", (req, res) => {
-  db.Workout.create({ req })
+  db.Workout.create(req.body)
     .then((dbWorkouts) => {
       res.json(dbWorkouts);
     })
